@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Implementing WebSockets</h1>
+
+    <div id="box-model">
+
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        const container = document.getElementById('box-model');
+
+        socket.on('connect', () => {
+            console.log('connected to server');
+        });
+
+
+        socket.on('box-model', (box) => {
+            console.log('box-model', box);
+
+            container.innerHTML = '';
+
+            box.forEach((item, index) => {
+                const checkbox = document.createElement('input');
+
+                checkbox.type = "checkbox";
+                checkbox.checked = item;
+                checkbox.id = `box-${index}`;
+
+                checkbox.addEventListener('change', () => {
+                    socket.emit('click', { index, value: checkbox.checked });
+                })
+                container.appendChild(checkbox);
+            });
+        });
+    </script>
+
+
+
+</body>
+
+</html>
